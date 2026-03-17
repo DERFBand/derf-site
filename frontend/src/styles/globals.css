@@ -1,1 +1,126 @@
-globals.css
+/* frontend/src/styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Root theme variables */
+:root{
+  --bg-dark: #0b0b0b;
+  --muted: #111316;
+  --accent: #D7263D;
+  --accent-2: #FFC857;
+  --soft: #94A3B8;
+}
+
+/* Reset & base */
+html, body, #__next { height: 100%; }
+body {
+  background: var(--bg-dark);
+  color: #E6EEF8;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.45;
+}
+
+/* Heading style */
+h1,h2,h3,h4 { font-family: "Bebas Neue", Inter, system-ui, sans-serif; letter-spacing: 0.02em; }
+
+/* Hero utilities */
+.hero {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  min-height: 66vh;
+  display: flex;
+  align-items: center;
+}
+
+/* Black overlay with subtle gradient for readability */
+.hero::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11,11,11,0.55) 0%, rgba(11,11,11,0.65) 40%, rgba(11,11,11,0.85) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Grain / texture (light) */
+:root { --grain-opacity: 0.03; }
+.grain {
+  pointer-events: none;
+  inset: 0;
+  position: absolute;
+  z-index: 6;
+  background-image: url('/assets/grain.png'); /* optional small noise tile if you have it */
+  opacity: var(--grain-opacity);
+}
+
+/* Hero content sits above overlay */
+.hero-content { position: relative; z-index: 10; }
+
+/* Display title */
+.hero-title {
+  font-size: clamp(2.2rem, 6vw, 4.8rem);
+  line-height: 0.9;
+  margin: 0;
+  color: #fff;
+  text-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.1rem;
+  border-radius: 10px;
+  font-weight: 700;
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+.btn-primary {
+  background: linear-gradient(90deg,var(--accent), #b71c2a);
+  color: white;
+  box-shadow: 0 8px 24px rgba(215,38,61,0.18);
+}
+.btn-primary:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(215,38,61,0.22); }
+.btn-ghost {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--soft);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+
+/* Card */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 1rem;
+  border-radius: 12px;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(2,6,23,0.6); }
+
+/* Nav link underline animation */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -6px;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .18s ease;
+}
+.nav-underline:hover::after { transform: scaleX(1); }
+
+/* Small responsive tweaks */
+@media (max-width: 768px) {
+  .hero { min-height: 56vh; padding: 2rem 1.2rem; }
+  .hero-title { font-size: 2.4rem; }
+}

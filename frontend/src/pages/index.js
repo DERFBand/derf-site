@@ -1,22 +1,29 @@
+// frontend/src/pages/index.js
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import Hero from '../components/Hero'
 
 export default function Home(){
   return (
     <div>
       <Header />
-      <main className="max-w-6xl mx-auto p-6">
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mb-10">
-          <div>
-            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">D.E.R.F.</h1>
-            <p className="mt-4 text-lg opacity-80">Latest release: <a className="underline" href="https://band.link/UXd3W">band.link/UXd3W</a></p>
-            <div className="mt-6 flex gap-3">
-              <a href="/music" className="px-4 py-2 border rounded">Music</a>
-              <a href="/shows" className="px-4 py-2 bg-white text-black rounded">Shows</a>
+      <main>
+        <Hero title="D.E.R.F." subtitle="Official band site" />
+        <section className="max-w-6xl mx-auto p-6">
+          {/* Example short feature row */}
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="card">
+              <h3 className="font-semibold">Upcoming show</h3>
+              <p className="mt-2 text-soft">Jam Fest — 25 Jan 2026 at Money Honey</p>
             </div>
-          </div>
-          <div className="rounded-lg overflow-hidden bg-gradient-to-br from-slate-800 to-slate-700 p-4">
-            <div className="w-full h-56 bg-black/40 flex items-center justify-center">Audio placeholder</div>
+            <div className="card">
+              <h3 className="font-semibold">Latest release</h3>
+              <p className="mt-2 text-soft">band.link/UXd3W — out now</p>
+            </div>
+            <div className="card">
+              <h3 className="font-semibold">Media</h3>
+              <p className="mt-2 text-soft">Videos, photos and live clips</p>
+            </div>
           </div>
         </section>
       </main>

@@ -5,7 +5,7 @@ export default function Music(){
   return (
     <div>
       <Header />
-      <main className="max-w-6xl mx-auto p-6">
+      <main className="max-w-6xl mx-auto p-6 mt-20">
         <h2 className="text-2xl font-bold mb-4">Music</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 border rounded bg-slate-900">

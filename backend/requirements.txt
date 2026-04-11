@@ -11,3 +11,4 @@ pillow==9.5.0
 alembic==1.11.1
 httpx==0.24.1
 python-dotenv==1.0.0
+pydantic[email]

@@ -1,10 +1,6 @@
-import Header from '../components/Header'
-import Footer from '../components/Footer'
-
 export default function Press(){
   return (
     <div>
-      <Header />
       <main className="max-w-6xl mx-auto p-6">
         <h2 className="text-2xl font-bold mb-4">Press</h2>
         <ul className="mt-4 space-y-3">
@@ -13,7 +9,6 @@ export default function Press(){
           <li className="p-3 border rounded bg-slate-900"><a className="underline" href="https://vkvideo.ru/@derfmusic/all">VK Video archive</a></li>
         </ul>
       </main>
-      <Footer />
     </div>
   )
 }

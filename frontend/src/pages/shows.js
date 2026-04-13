@@ -1,5 +1,3 @@
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import useSWR from 'swr'
 import axios from 'axios'
 import EventCard from '../components/EventCard'
@@ -11,14 +9,12 @@ export default function Shows(){
   const events = data || []
   return (
     <div>
-      <Header />
       <main className="max-w-6xl mx-auto p-6">
         <h2 className="text-2xl font-bold mb-4">Shows</h2>
         <div className="mt-6 grid gap-4">
           {events.map(e => <EventCard key={e.id} event={e} />)}
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

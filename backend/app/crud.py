@@ -1,7 +1,11 @@
-from typing import Optional, List
+from typing import List, Optional
+
 from sqlmodel import select
-from app.models import User, Release, ReleaseTranslation, Event, EventTranslation, MediaItem
+
 from app.db.session import AsyncSessionLocal
+from app.models import (Event, EventTranslation, MediaItem, Release,
+                        ReleaseTranslation, User)
+
 
 # USER helpers
 async def get_user_by_username(username: str) -> Optional[User]:
@@ -10,12 +14,14 @@ async def get_user_by_username(username: str) -> Optional[User]:
         r = await session.exec(q)
         return r.first()
 
+
 async def create_user(user: User) -> User:
     async with AsyncSessionLocal() as session:
         session.add(user)
         await session.commit()
         await session.refresh(user)
         return user
+
 
 # RELEASE helpers
 async def create_release_with_translation(slug: str, release_date, title: str, description: str, lang: str) -> Release:
@@ -30,12 +36,20 @@ async def create_release_with_translation(slug: str, release_date, title: str, d
         await session.refresh(tr)
         return rel
 
+
+async def get_releases():
+    async with AsyncSessionLocal() as session:
+        q = select(Release).order_by(Release.id.desc())
+        return await session.exec(q)
+
+
 # EVENTS
 async def list_events() -> List[Event]:
     async with AsyncSessionLocal() as session:
         q = select(Event).order_by(Event.start_at.desc())
         r = await session.exec(q)
         return r.all()
+
 
 async def create_event(title: str, venue: str, city: str, start_at, metadata_json: str = None) -> Event:
     async with AsyncSessionLocal() as session:
@@ -44,6 +58,7 @@ async def create_event(title: str, venue: str, city: str, start_at, metadata_jso
         await session.commit()
         await session.refresh(e)
         return e
+
 
 # MEDIA
 async def save_media_item(item: MediaItem) -> MediaItem:

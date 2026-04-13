@@ -1,4 +1,3 @@
-// frontend/src/components/Hero.js
 export default function Hero({ title = "D.E.R.F.", subtitle = "Official band site", ctaUrl = "/music" }) {
   return (
     <section

@@ -1,5 +1,3 @@
-import Header from '../components/Header'
-import Footer from '../components/Footer'
 import useSWR from 'swr'
 import axios from 'axios'
 import MediaGrid from '../components/MediaGrid'
@@ -11,12 +9,10 @@ export default function Media(){
   const items = data || []
   return (
     <div>
-      <Header />
       <main className="max-w-6xl mx-auto p-6">
         <h2 className="text-2xl font-bold mb-4">Media</h2>
         <MediaGrid items={items} />
       </main>
-      <Footer />
     </div>
   )
 }

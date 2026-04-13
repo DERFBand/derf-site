@@ -1,33 +1,61 @@
-// frontend/src/pages/index.js
-import Header from '../components/Header'
-import Footer from '../components/Footer'
+import { useEffect, useState } from 'react'
 import Hero from '../components/Hero'
 
-export default function Home(){
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
+export default function Home() {
+  const [events, setEvents] = useState([])
+  const [releases, setReleases] = useState([])
+
+  useEffect(() => {
+    fetch(`${API}/api/v1/events`)
+      .then(res => res.json())
+      .then(setEvents)
+      .catch(console.error)
+
+    fetch(`${API}/api/v1/content/releases`)
+      .then(res => res.json())
+      .then(setReleases)
+      .catch(console.error)
+  }, [])
+
+  const nextEvent = events?.[0]
+  const latestRelease = releases?.[0]
+
   return (
-    <div>
-      <Header />
-      <main>
-        <Hero title="D.E.R.F." subtitle="Official band site" />
-        <section className="max-w-6xl mx-auto p-6">
-          {/* Example short feature row */}
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="card">
-              <h3 className="font-semibold">Upcoming show</h3>
-              <p className="mt-2 text-soft">Jam Fest — 25 Jan 2026 at Money Honey</p>
-            </div>
-            <div className="card">
-              <h3 className="font-semibold">Latest release</h3>
-              <p className="mt-2 text-soft">band.link/UXd3W — out now</p>
-            </div>
-            <div className="card">
-              <h3 className="font-semibold">Media</h3>
-              <p className="mt-2 text-soft">Videos, photos and live clips</p>
-            </div>
+    <>
+      <Hero title="D.E.R.F." subtitle="Official band site" />
+
+      <section className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid md:grid-cols-3 gap-6">
+
+          <div className="card">
+            <h3 className="font-semibold">Upcoming show</h3>
+            <p className="mt-2 text-soft">
+              {nextEvent
+                ? `${nextEvent.title} — ${new Date(nextEvent.date).toLocaleDateString()}`
+                : 'No upcoming events'}
+            </p>
           </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
+
+          <div className="card">
+            <h3 className="font-semibold">Latest release</h3>
+            <p className="mt-2 text-soft">
+              {latestRelease
+                ? latestRelease.title || latestRelease.external_url
+                : 'No releases yet'}
+            </p>
+          </div>
+
+          <div className="card">
+            <h3 className="font-semibold">Media</h3>
+            <p className="mt-2 text-soft">
+              Photos and videos from live shows
+            </p>
+          </div>
+
+        </div>
+      </section>
+    </>
   )
 }

@@ -1,6 +1,8 @@
-// frontend/src/pages/_app.js
 import Head from 'next/head'
 import '../styles/globals.css'
+
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
 export default function App({ Component, pageProps }) {
   return (
@@ -8,11 +10,18 @@ export default function App({ Component, pageProps }) {
       <Head>
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Display font for headings */}
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
         <title>D.E.R.F. — Official</title>
       </Head>
-      <Component {...pageProps} />
+
+      {/* Global layout */}
+      <div className="min-h-screen flex flex-col bg-black text-white">
+        <Header />
+        <main className="flex-1">
+          <Component {...pageProps} />
+        </main>
+        <Footer />
+      </div>
     </>
   )
 }

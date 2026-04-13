@@ -124,3 +124,19 @@ h1,h2,h3,h4 { font-family: "Bebas Neue", Inter, system-ui, sans-serif; letter-sp
   .hero { min-height: 56vh; padding: 2rem 1.2rem; }
   .hero-title { font-size: 2.4rem; }
 }
+
+body {
+  @apply bg-black text-white;
+}
+
+.card {
+  @apply bg-zinc-900/70 backdrop-blur border border-zinc-800 rounded-2xl p-6 transition;
+}
+
+.card:hover {
+  @apply border-red-800 shadow-lg shadow-red-900/20;
+}
+
+.text-soft {
+  @apply text-zinc-400;
+}

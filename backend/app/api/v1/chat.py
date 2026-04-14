@@ -1,12 +1,17 @@
+from __future__ import annotations
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from typing import Dict, List
+from sqlmodel import select
+
+from app.db.session import AsyncSessionLocal
+from app.models import ChatMessage
 
 router = APIRouter()
 
-# Simple in-memory connection manager (single-process)
+
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: Dict[str, List[WebSocket]] = {}
+        self.active_connections: dict[str, list[WebSocket]] = {}
 
     async def connect(self, room: str, websocket: WebSocket):
         await websocket.accept()
@@ -25,17 +30,37 @@ class ConnectionManager:
             try:
                 await ws.send_text(message)
             except Exception:
-                # if sending fails, remove connection
                 self.disconnect(room, ws)
 
+
 manager = ConnectionManager()
+
 
 @router.websocket('/ws/{room}')
 async def websocket_endpoint(websocket: WebSocket, room: str):
     await manager.connect(room, websocket)
     try:
-        while True:
-            data = await websocket.receive_text()
-            await manager.broadcast(room, data)
+        async with AsyncSessionLocal() as session:
+            while True:
+                data = await websocket.receive_text()
+                session.add(ChatMessage(room=room, content=data))
+                await session.commit()
+                await manager.broadcast(room, data)
     except WebSocketDisconnect:
         manager.disconnect(room, websocket)
+
+
+@router.get('/chat/messages/{room}')
+async def get_messages(room: str):
+    async with AsyncSessionLocal() as session:
+        result = await session.exec(select(ChatMessage).where(ChatMessage.room == room).order_by(ChatMessage.sent_at.asc()))
+        return [
+            {
+                'id': message.id,
+                'room': message.room,
+                'sender_id': message.sender_id,
+                'content': message.content,
+                'sent_at': message.sent_at.isoformat() if message.sent_at else None,
+            }
+            for message in result.all()
+        ]

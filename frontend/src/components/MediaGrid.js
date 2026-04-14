@@ -1,19 +1,40 @@
-// frontend/src/components/MediaGrid.js
-export default function MediaGrid({items}){
+export default function MediaGrid({ items = [] }) {
+  if (!items.length) return null
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-      {items.map(i => (
-        <a key={i.id} href={i.url} className="block rounded overflow-hidden bg-slate-900 p-0 card">
-          <div className="h-48 bg-black/30 flex items-center justify-center overflow-hidden">
-            {/* Use <img> to let browser lazy-load */}
-            <img src={i.thumbnail_url || i.url} alt={i.alt_text || i.title || 'Media'} loading="lazy" className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-105" />
-          </div>
-          <div className="p-3">
-            <div className="text-sm text-soft">{i.media_type.toUpperCase()}</div>
-            <div className="mt-1 font-semibold">{i.alt_text || i.title || 'Untitled'}</div>
-          </div>
-        </a>
-      ))}
+    <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      {items.map((item) => {
+        const src = item.thumbnail_url || item.url
+        const title = item.title || item.alt_text || item.caption || 'Media'
+        const badge = (item.media_type || 'media').toUpperCase()
+
+        return (
+          <a
+            key={item.id}
+            href={item.url}
+            target="_blank"
+            rel="noreferrer"
+            className="group overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] transition hover:-translate-y-1 hover:border-red-500/30 hover:bg-white/[0.05]"
+          >
+            <div className="relative aspect-[4/3] overflow-hidden bg-black">
+              <img
+                src={src}
+                alt={title}
+                loading="lazy"
+                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
+              <span className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-100 backdrop-blur">
+                {badge}
+              </span>
+            </div>
+            <div className="space-y-2 p-4">
+              <div className="text-sm font-semibold text-white">{title}</div>
+              {item.caption ? <p className="text-sm leading-6 text-zinc-400">{item.caption}</p> : null}
+            </div>
+          </a>
+        )
+      })}
     </div>
   )
 }

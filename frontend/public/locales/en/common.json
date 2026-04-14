@@ -1,8 +1,86 @@
 {
-  "music": "Music",
-  "shows": "Shows",
-  "media": "Media",
-  "press": "Press",
-  "listen": "Listen",
-  "heroTitle": "D.E.R.F. – Official Band Site"
+  "brand": "D.E.R.F.",
+  "nav": {
+    "music": "Music",
+    "shows": "Shows",
+    "media": "Media",
+    "press": "Press",
+    "forum": "Forum",
+    "chat": "Live chat",
+    "login": "Log in"
+  },
+  "hero": {
+    "eyebrow": "Official band site",
+    "body": "Heavy rock and metal with classical heavy metal, doom, thrash, industrial, and gothic elements. Emotional stories about despair and catharsis.",
+    "primaryCta": "Listen now",
+    "secondaryCta": "View shows"
+  },
+  "sections": {
+    "latestRelease": "Latest release",
+    "nextShow": "Next show",
+    "featuredMedia": "Featured media",
+    "pressHighlights": "Press highlights",
+    "music": "Music",
+    "shows": "Shows",
+    "media": "Media",
+    "press": "Press",
+    "forum": "Forum",
+    "chat": "Live chat",
+    "upcomingShows": "Upcoming shows",
+    "pastShows": "Past shows",
+    "threads": "Threads",
+    "recentMessages": "Recent messages"
+  },
+  "actions": {
+    "openRelease": "Open release",
+    "allReleases": "All releases",
+    "allShows": "All shows",
+    "allMedia": "All media",
+    "openLink": "Open link",
+    "createThread": "Create thread",
+    "send": "Send",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "logout": "Log out",
+    "loadMore": "Load more",
+    "tickets": "Tickets",
+    "source": "Source"
+  },
+  "auth": {
+    "title": "Account",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "welcome": "Signed in as",
+    "guest": "Guest mode",
+    "subtitle": "Use JWT from the official backend to sign in or register."
+  },
+  "empty": {
+    "releases": "No releases yet.",
+    "events": "No events found.",
+    "media": "No media items yet.",
+    "press": "No press items yet.",
+    "threads": "No threads yet.",
+    "messages": "No messages yet."
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "social": "Official links"
+  },
+  "locale": {
+    "english": "English",
+    "russian": "Russian"
+  },
+  "pages": {
+    "login": "Log in",
+    "register": "Register",
+    "forum": "Forum",
+    "chat": "Live chat"
+  },
+  "filters": {
+    "all": "All",
+    "photos": "Photos",
+    "videos": "Videos",
+    "audio": "Audio"
+  }
 }

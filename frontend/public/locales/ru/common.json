@@ -1,9 +1,86 @@
 {
-  "music": "Музыка",
-  "shows": "Концерты",
-  "media": "Медиа",
-  "press": "Пресса",
-  "listen": "Слушать",
-  "heroTitle": "D.E.R.F. – Официальный сайт группы"
-  "Official band site": "Официальный сайт группы"
+  "brand": "D.E.R.F.",
+  "nav": {
+    "music": "Музыка",
+    "shows": "Концерты",
+    "media": "Медиа",
+    "press": "Пресса",
+    "forum": "Форум",
+    "chat": "Чат",
+    "login": "Войти"
+  },
+  "hero": {
+    "eyebrow": "Официальный сайт группы",
+    "body": "Тяжёлый рок и металл с элементами классического heavy metal, doom, thrash, industrial и gothic. Эмоциональные истории о отчаянии и катарсисе.",
+    "primaryCta": "Слушать",
+    "secondaryCta": "Смотреть концерты"
+  },
+  "sections": {
+    "latestRelease": "Последний релиз",
+    "nextShow": "Ближайший концерт",
+    "featuredMedia": "Избранное медиа",
+    "pressHighlights": "Пресса",
+    "music": "Музыка",
+    "shows": "Концерты",
+    "media": "Медиа",
+    "press": "Пресса",
+    "forum": "Форум",
+    "chat": "Чат",
+    "upcomingShows": "Предстоящие концерты",
+    "pastShows": "Прошедшие концерты",
+    "threads": "Темы",
+    "recentMessages": "Последние сообщения"
+  },
+  "actions": {
+    "openRelease": "Открыть релиз",
+    "allReleases": "Все релизы",
+    "allShows": "Все концерты",
+    "allMedia": "Все медиа",
+    "openLink": "Открыть ссылку",
+    "createThread": "Создать тему",
+    "send": "Отправить",
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "logout": "Выйти",
+    "loadMore": "Показать ещё",
+    "tickets": "Билеты",
+    "source": "Источник"
+  },
+  "auth": {
+    "title": "Аккаунт",
+    "username": "Логин",
+    "email": "Email",
+    "password": "Пароль",
+    "welcome": "Вы вошли как",
+    "guest": "Режим гостя",
+    "subtitle": "Используйте JWT из официального backend для входа или регистрации."
+  },
+  "empty": {
+    "releases": "Релизы пока не добавлены.",
+    "events": "События не найдены.",
+    "media": "Медиа пока нет.",
+    "press": "Материалы прессы пока отсутствуют.",
+    "threads": "Тем пока нет.",
+    "messages": "Сообщений пока нет."
+  },
+  "footer": {
+    "rights": "Все права защищены.",
+    "social": "Официальные ссылки"
+  },
+  "locale": {
+    "english": "Английский",
+    "russian": "Русский"
+  },
+  "pages": {
+    "login": "Вход",
+    "register": "Регистрация",
+    "forum": "Форум",
+    "chat": "Чат"
+  },
+  "filters": {
+    "all": "Все",
+    "photos": "Фото",
+    "videos": "Видео",
+    "audio": "Аудио"
+  }
 }

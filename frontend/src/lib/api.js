@@ -6,6 +6,11 @@ export const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 20000,
   withCredentials: false,
+  adapter: 'fetch',
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json',
+  }
 })
 
 function getToken() {

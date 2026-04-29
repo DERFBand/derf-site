@@ -5,27 +5,19 @@ from typing import Optional
 
 from fastapi import APIRouter, Query
 
-from app.crud import create_release_with_translation, list_events, list_media, list_press_items, list_releases
-from app.schemas import EventRead, HomeContent, MediaItemRead, PressItemRead, ReleaseCreate, ReleaseRead
+from app.crud import create_release_with_translation, get_site_settings, list_events, list_media, list_press_items, list_releases, list_site_links
+from app.schemas import EventRead, HomeContent, MediaItemRead, PressItemRead, ReleaseCreate, ReleaseRead, SiteLinkRead, SiteSettingsRead
 
 router = APIRouter()
 
 
-def _release_read(item: dict) -> ReleaseRead:
-    return ReleaseRead(**item)
-
-
-def _event_read(item: dict) -> EventRead:
-    return EventRead(**item)
-
-
-def _press_read(item: dict) -> PressItemRead:
-    return PressItemRead(**item)
+def _as_model_list(items: list[dict], model):
+    return [model(**item) for item in items]
 
 
 @router.get('/releases', response_model=list[ReleaseRead])
 async def api_get_releases(lang: Optional[str] = Query(default=None)):
-    return [_release_read(item) for item in await list_releases(lang=lang)]
+    return _as_model_list(await list_releases(lang=lang), ReleaseRead)
 
 
 @router.post('/releases', response_model=ReleaseRead)
@@ -58,15 +50,26 @@ async def post_release(data: ReleaseCreate):
 
 @router.get('/press', response_model=list[PressItemRead])
 async def api_get_press(lang: Optional[str] = Query(default=None)):
-    return [_press_read(item) for item in await list_press_items(lang=lang)]
+    return _as_model_list(await list_press_items(lang=lang), PressItemRead)
+
+
+@router.get('/links', response_model=list[SiteLinkRead])
+async def api_get_links():
+    return _as_model_list(await list_site_links(), SiteLinkRead)
+
+
+@router.get('/settings', response_model=SiteSettingsRead)
+async def api_get_settings(lang: Optional[str] = Query(default=None)):
+    return SiteSettingsRead(values=await get_site_settings(lang=lang))
 
 
 @router.get('/home', response_model=HomeContent)
 async def home_content(lang: Optional[str] = Query(default=None)):
     releases = await list_releases(lang=lang)
     events = await list_events(lang=lang)
-    media = await list_media(featured_only=True)
+    media = await list_media(featured_only=True, lang=lang)
     press = await list_press_items(lang=lang)
+    site_links = await list_site_links()
     latest_release = ReleaseRead(**releases[0]) if releases else None
     next_event = None
     now = datetime.utcnow()
@@ -84,6 +87,7 @@ async def home_content(lang: Optional[str] = Query(default=None)):
     return HomeContent(
         latest_release=latest_release,
         next_event=next_event,
-        featured_media=[MediaItemRead(**item) for item in media[:6]],
-        press_items=[PressItemRead(**item) for item in press[:4]],
+        featured_media=_as_model_list(media[:6], MediaItemRead),
+        press_items=_as_model_list(press[:4], PressItemRead),
+        site_links=_as_model_list(site_links, SiteLinkRead),
     )

@@ -81,6 +81,23 @@ class PressItemTranslation(SQLModel, table=True):
     press_item: Optional[PressItem] = Relationship(back_populates="translations")
 
 
+class SiteLink(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    key: str = Field(index=True, unique=True)
+    label: str = Field(index=True)
+    url: str
+    sort_order: int = Field(default=0, index=True)
+    is_active: bool = Field(default=True, index=True)
+
+
+class SiteSetting(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    key: str = Field(index=True)
+    lang: Optional[str] = Field(default=None, index=True)
+    value: str
+    is_active: bool = Field(default=True, index=True)
+
+
 class User(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     username: str = Field(index=True, unique=True)

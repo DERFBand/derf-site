@@ -5,20 +5,22 @@ import { useEffect, useMemo, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import MediaGrid from '../components/MediaGrid'
-import { api } from '../lib/api'
+import { useSiteSettings } from '../context/SiteSettingsContext'
+import { fetchMediaList } from '../lib/contentApi'
+import { buildPageTitle } from '../lib/pageTitle'
 
 export default function Media() {
   const router = useRouter()
   const { t } = useTranslation('common')
+  const { siteName } = useSiteSettings()
   const [items, setItems] = useState([])
   const [filter, setFilter] = useState('all')
   const lang = router.locale || 'en'
 
   useEffect(() => {
     if (!router.isReady) return
-    api
-      .get('/api/v1/media/list', { params: { lang } })
-      .then((response) => setItems(response.data || []))
+    fetchMediaList({ lang })
+      .then((data) => setItems(data))
       .catch((error) => console.error(error))
   }, [lang, router.isReady])
 
@@ -30,7 +32,7 @@ export default function Media() {
   return (
     <>
       <Head>
-        <title>{t('sections.media')} — D.E.R.F.</title>
+        <title>{buildPageTitle(t('sections.media'), siteName)}</title>
       </Head>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">

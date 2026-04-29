@@ -100,6 +100,18 @@ class PressItemRead(BaseModel):
     description: Optional[str] = None
 
 
+class SiteLinkRead(BaseModel):
+    id: int
+    key: str
+    label: str
+    url: str
+    sort_order: int = 0
+
+
+class SiteSettingsRead(BaseModel):
+    values: dict[str, str]
+
+
 class ThreadCreate(BaseModel):
     title: str
 
@@ -128,3 +140,4 @@ class HomeContent(BaseModel):
     next_event: Optional[EventRead] = None
     featured_media: list[MediaItemRead] = []
     press_items: list[PressItemRead] = []
+    site_links: list[SiteLinkRead] = []

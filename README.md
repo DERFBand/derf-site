@@ -122,6 +122,12 @@ Run:
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
+Seed default DB content:
+
+```bash
+python seed_default_data.py
+```
+
 ---
 
 ### 4. systemd service
@@ -255,3 +261,13 @@ Accessible via:
 ## 📄 License
 
 Private / Internal Use
+
+---
+
+## ✅ CI
+
+GitHub Actions workflow runs on every push and pull request:
+
+- backend tests (`pytest`)
+- backend smoke checks (`python smoke_test.py`)
+- frontend production build (`npm run build`)

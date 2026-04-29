@@ -4,26 +4,28 @@ import { useTranslation } from 'next-i18next'
 import { useEffect, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { api } from '../lib/api'
+import { useSiteSettings } from '../context/SiteSettingsContext'
+import { fetchPressItems } from '../lib/contentApi'
+import { buildPageTitle } from '../lib/pageTitle'
 
 export default function Press() {
   const router = useRouter()
   const { t } = useTranslation('common')
+  const { siteName } = useSiteSettings()
   const [items, setItems] = useState([])
   const lang = router.locale || 'en'
 
   useEffect(() => {
     if (!router.isReady) return
-    api
-      .get('/api/v1/content/press', { params: { lang } })
-      .then((response) => setItems(response.data || []))
+    fetchPressItems(lang)
+      .then((data) => setItems(data))
       .catch((error) => console.error(error))
   }, [lang, router.isReady])
 
   return (
     <>
       <Head>
-        <title>{t('sections.press')} — D.E.R.F.</title>
+        <title>{buildPageTitle(t('sections.press'), siteName)}</title>
       </Head>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">

@@ -4,7 +4,9 @@ import { useTranslation } from 'next-i18next'
 import { useEffect, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
-import { api } from '../lib/api'
+import { useSiteSettings } from '../context/SiteSettingsContext'
+import { fetchReleases } from '../lib/contentApi'
+import { buildPageTitle } from '../lib/pageTitle'
 
 function formatDate(value, locale) {
   if (!value) return null
@@ -14,21 +16,23 @@ function formatDate(value, locale) {
 export default function Music() {
   const router = useRouter()
   const { t, i18n } = useTranslation('common')
+  const { siteName } = useSiteSettings()
   const [releases, setReleases] = useState([])
   const lang = router.locale || 'en'
 
   useEffect(() => {
     if (!router.isReady) return
-    api
-      .get('/api/v1/content/releases', { params: { lang } })
-      .then((response) => setReleases(response.data || []))
+    fetchReleases(lang)
+      .then((data) => setReleases(data))
       .catch((error) => console.error(error))
   }, [lang, router.isReady])
+
+  const primaryRelease = releases[0] || null
 
   return (
     <>
       <Head>
-        <title>{t('sections.music')} — D.E.R.F.</title>
+        <title>{buildPageTitle(t('sections.music'), siteName)}</title>
       </Head>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">
@@ -37,7 +41,7 @@ export default function Music() {
             <div className="text-xs uppercase tracking-[0.24em] text-zinc-500">{t('sections.music')}</div>
             <h1 className="mt-3 font-heading text-5xl text-white md:text-6xl">{t('sections.music')}</h1>
           </div>
-          <a href="https://band.link/UXd3W" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-red-600 to-rose-700 px-5 py-3 text-sm font-semibold text-white">
+          <a href={primaryRelease?.external_url || '/music'} target={primaryRelease?.external_url ? '_blank' : undefined} rel={primaryRelease?.external_url ? 'noreferrer' : undefined} className="rounded-full bg-gradient-to-r from-red-600 to-rose-700 px-5 py-3 text-sm font-semibold text-white">
             {t('actions.openRelease')}
           </a>
         </div>

@@ -68,5 +68,5 @@ async def upload_media(
 
 
 @router.get('/media/list', response_model=list[MediaItemRead])
-async def api_list_media(media_type: str | None = None, featured_only: bool = False):
-    return [MediaItemRead(**item) for item in await list_media(media_type=media_type, featured_only=featured_only)]
+async def api_list_media(media_type: str | None = None, featured_only: bool = False, lang: str | None = None):
+    return [MediaItemRead(**item) for item in await list_media(media_type=media_type, featured_only=featured_only, lang=lang)]

@@ -1,8 +1,22 @@
 import { useTranslation } from 'next-i18next'
+import { useEffect, useState } from 'react'
+
+import { fetchSiteLinks } from '../lib/contentApi'
 
 export default function Footer() {
   const { t } = useTranslation('common')
   const year = new Date().getFullYear()
+  const [links, setLinks] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+    fetchSiteLinks()
+      .then((data) => {
+        if (!cancelled) setLinks(data)
+      })
+      .catch((error) => console.error(error))
+    return () => { cancelled = true }
+  }, [])
 
   return (
     <footer className="border-t border-white/10 bg-black/60 py-10">
@@ -16,18 +30,11 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-wrap gap-3 text-sm">
-          <a className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-zinc-200 transition hover:border-white/20 hover:bg-white/10" href="https://vk.com/derfmusic" target="_blank" rel="noreferrer">
-            VK
-          </a>
-          <a className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-zinc-200 transition hover:border-white/20 hover:bg-white/10" href="https://www.youtube.com/@D_E_R_F" target="_blank" rel="noreferrer">
-            YouTube
-          </a>
-          <a className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-zinc-200 transition hover:border-white/20 hover:bg-white/10" href="https://vkvideo.ru/@derfmusic/all" target="_blank" rel="noreferrer">
-            VK Video
-          </a>
-          <a className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-zinc-200 transition hover:border-white/20 hover:bg-white/10" href="https://band.link/UXd3W" target="_blank" rel="noreferrer">
-            Band.link
-          </a>
+          {links.map((link) => (
+            <a key={link.id} className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-zinc-200 transition hover:border-white/20 hover:bg-white/10" href={link.url} target="_blank" rel="noreferrer">
+              {link.label}
+            </a>
+          ))}
         </div>
       </div>
     </footer>

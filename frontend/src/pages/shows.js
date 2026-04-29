@@ -5,19 +5,21 @@ import { useEffect, useMemo, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import EventCard from '../components/EventCard'
-import { api } from '../lib/api'
+import { useSiteSettings } from '../context/SiteSettingsContext'
+import { fetchEvents } from '../lib/contentApi'
+import { buildPageTitle } from '../lib/pageTitle'
 
 export default function Shows() {
   const router = useRouter()
   const { t, i18n } = useTranslation('common')
+  const { siteName } = useSiteSettings()
   const [events, setEvents] = useState([])
   const lang = router.locale || 'en'
 
   useEffect(() => {
     if (!router.isReady) return
-    api
-      .get('/api/v1/events', { params: { lang } })
-      .then((response) => setEvents(response.data || []))
+    fetchEvents(lang)
+      .then((data) => setEvents(data))
       .catch((error) => console.error(error))
   }, [lang, router.isReady])
 
@@ -35,7 +37,7 @@ export default function Shows() {
   return (
     <>
       <Head>
-        <title>{t('sections.shows')} — D.E.R.F.</title>
+        <title>{buildPageTitle(t('sections.shows'), siteName)}</title>
       </Head>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-6">

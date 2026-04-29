@@ -6,7 +6,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 import Hero from '../components/Hero'
-import { api } from '../lib/api'
+import { useSiteSettings } from '../context/SiteSettingsContext'
+import { fetchHomeContent, fetchMediaList } from '../lib/contentApi'
+import { buildPageTitle } from '../lib/pageTitle'
 
 function formatDate(value, locale) {
   if (!value) return ''
@@ -22,6 +24,7 @@ function formatDate(value, locale) {
 export default function Home() {
   const router = useRouter()
   const { t, i18n } = useTranslation('common')
+  const { siteName } = useSiteSettings()
   const [home, setHome] = useState(null)
   const [featuredMedia, setFeaturedMedia] = useState([])
   const [loading, setLoading] = useState(true)
@@ -33,14 +36,11 @@ export default function Home() {
     let cancelled = false
     setLoading(true)
 
-    Promise.all([
-      api.get('/api/v1/content/home', { params: { lang } }),
-      api.get('/api/v1/media/list', { params: { featured_only: true } }),
-    ])
-      .then(([homeRes, mediaRes]) => {
+    Promise.all([fetchHomeContent(lang), fetchMediaList({ featured_only: true })])
+      .then(([homeData, mediaData]) => {
         if (cancelled) return
-        setHome(homeRes.data)
-        setFeaturedMedia(mediaRes.data || [])
+        setHome(homeData)
+        setFeaturedMedia(mediaData)
       })
       .catch((error) => {
         console.error(error)
@@ -57,7 +57,7 @@ export default function Home() {
   const heroBackground = useMemo(() => {
     const mediaPool = featuredMedia.length ? featuredMedia : home?.featured_media || []
     const candidate = mediaPool.find((item) => item.media_type === 'photo') || mediaPool[0]
-    return candidate?.thumbnail_url || candidate?.url || '/assets/bg-hero.jpg'
+    return candidate?.thumbnail_url || candidate?.url || '/assets/logo-placeholder.svg'
   }, [featuredMedia, home])
 
   const locale = i18n.language || lang
@@ -65,7 +65,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>D.E.R.F. — {t('brand')}</title>
+        <title>{buildPageTitle(t('brand'), siteName)}</title>
       </Head>
 
       <Hero latestRelease={latestRelease} nextEvent={nextShow} backgroundImage={heroBackground} />

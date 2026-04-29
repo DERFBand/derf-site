@@ -15,6 +15,8 @@ from app.models import (
     PressItemTranslation,
     Release,
     ReleaseTranslation,
+    SiteLink,
+    SiteSetting,
     User,
 )
 from app.core.security import get_password_hash
@@ -206,13 +208,15 @@ async def save_media_item(item: MediaItem) -> MediaItem:
         return item
 
 
-async def list_media(media_type: Optional[str] = None, featured_only: bool = False) -> List[dict]:
+async def list_media(media_type: Optional[str] = None, featured_only: bool = False, lang: Optional[str] = None) -> List[dict]:
     async with AsyncSessionLocal() as session:
         stmt = select(MediaItem).order_by(MediaItem.is_featured.desc(), MediaItem.uploaded_at.desc())
         if media_type:
             stmt = stmt.where(MediaItem.media_type == media_type)
         if featured_only:
             stmt = stmt.where(MediaItem.is_featured.is_(True))
+        if lang:
+            stmt = stmt.where((MediaItem.lang == lang) | (MediaItem.lang.is_(None)))
         result = await session.exec(stmt)
         return [
             {
@@ -231,6 +235,44 @@ async def list_media(media_type: Optional[str] = None, featured_only: bool = Fal
             }
             for item in result.all()
         ]
+
+
+async def list_site_links() -> List[dict]:
+    async with AsyncSessionLocal() as session:
+        result = await session.exec(
+            select(SiteLink)
+            .where(SiteLink.is_active.is_(True))
+            .order_by(SiteLink.sort_order.asc(), SiteLink.id.asc())
+        )
+        return [
+            {
+                "id": item.id,
+                "key": item.key,
+                "label": item.label,
+                "url": item.url,
+                "sort_order": item.sort_order,
+            }
+            for item in result.all()
+        ]
+
+
+async def get_site_settings(lang: Optional[str] = None) -> dict[str, str]:
+    async with AsyncSessionLocal() as session:
+        result = await session.exec(
+            select(SiteSetting)
+            .where(SiteSetting.is_active.is_(True))
+            .order_by(SiteSetting.id.asc())
+        )
+        items = result.all()
+        values: dict[str, str] = {}
+        for item in items:
+            if item.lang is None:
+                values[item.key] = item.value
+        if lang:
+            for item in items:
+                if item.lang == lang:
+                    values[item.key] = item.value
+        return values
 
 
 async def create_press_item(
@@ -328,6 +370,31 @@ async def seed_default_content() -> None:
         ("https://www.youtube.com/@D_E_R_F", "YouTube channel", "video_archive", "YouTube"),
         ("https://vkvideo.ru/@derfmusic/all", "VK Video archive", "video_archive", "VK Video"),
     ]
+    media_seed = [
+        {
+            "media_type": "photo",
+            "source": "local",
+            "url": "/assets/logo-placeholder.svg",
+            "thumbnail_url": "/assets/logo-placeholder.svg",
+            "title": "D.E.R.F. Live",
+            "alt_text": "D.E.R.F. live performance",
+            "caption": "Live performance",
+            "lang": "en",
+            "is_featured": True,
+        },
+    ]
+    site_link_seed = [
+        {"key": "vk", "label": "VK", "url": "https://vk.com/derfmusic", "sort_order": 0},
+        {"key": "youtube", "label": "YouTube", "url": "https://www.youtube.com/@D_E_R_F", "sort_order": 1},
+        {"key": "vk-video", "label": "VK Video", "url": "https://vkvideo.ru/@derfmusic/all", "sort_order": 2},
+        {"key": "bandlink", "label": "Band.link", "url": "https://band.link/UXd3W", "sort_order": 3},
+    ]
+    site_setting_seed = [
+        {"key": "site_name", "lang": None, "value": "D.E.R.F."},
+        {"key": "site_title_suffix", "lang": None, "value": "Official"},
+        {"key": "site_description", "lang": "en", "value": "D.E.R.F. — official band website"},
+        {"key": "site_description", "lang": "ru", "value": "D.E.R.F. — официальный сайт группы"},
+    ]
 
     async with AsyncSessionLocal() as session:
         for seed in release_seed:
@@ -392,3 +459,36 @@ async def seed_default_content() -> None:
                 translation = PressItemTranslation(press_item_id=item.id, lang="en", title=title)
                 session.add(translation)
                 await session.commit()
+
+        for seed in media_seed:
+            result = await session.exec(select(MediaItem).where(MediaItem.url == seed["url"], MediaItem.lang == seed["lang"]))
+            item = result.first()
+            if not item:
+                session.add(MediaItem(**seed))
+                await session.commit()
+
+        for seed in site_link_seed:
+            result = await session.exec(select(SiteLink).where(SiteLink.key == seed["key"]))
+            link = result.first()
+            if not link:
+                link = SiteLink(**seed)
+            else:
+                link.label = seed["label"]
+                link.url = seed["url"]
+                link.sort_order = seed["sort_order"]
+                link.is_active = True
+            session.add(link)
+            await session.commit()
+
+        for seed in site_setting_seed:
+            result = await session.exec(
+                select(SiteSetting).where(SiteSetting.key == seed["key"], SiteSetting.lang == seed["lang"])
+            )
+            setting = result.first()
+            if not setting:
+                setting = SiteSetting(**seed)
+            else:
+                setting.value = seed["value"]
+                setting.is_active = True
+            session.add(setting)
+            await session.commit()
